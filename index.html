@@ -1,974 +1,411 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Terminology Test (63 Questions)</title>
+    <title>Programming Knowledge Test</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
         }
         h1 {
             color: #2c3e50;
             text-align: center;
-            margin-bottom: 10px;
-        }
-        .settings {
-            background-color: white;
-            padding: 15px;
             margin-bottom: 20px;
+        }
+        .question-container {
+            background-color: white;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         .question {
-            background-color: white;
-            padding: 15px;
+            font-size: 18px;
             margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
         }
         .options {
-            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         .option {
-            margin: 5px 0;
-            padding: 8px;
+            padding: 12px;
+            border: 1px solid #ddd;
             border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
         .option:hover {
             background-color: #f0f0f0;
         }
+        .option.selected.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        .option.selected.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        .option.correct-answer {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+        }
         button {
-            background-color: #3498db;
-            color: white;
+            padding: 12px 20px;
             border: none;
-            padding: 10px 15px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            display: block;
-            margin: 20px auto;
-            transition: background-color 0.3s;
+            flex: 1;
         }
-        button:hover {
-            background-color: #2980b9;
+        #prev-btn {
+            background-color: #6c757d;
+            color: white;
         }
-        button:disabled {
-            background-color: #95a5a6;
-            cursor: not-allowed;
+        #next-btn {
+            background-color: #007bff;
+            color: white;
         }
-        .result {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
+        #finish-btn {
+            background-color: #dc3545;
+            color: white;
+            display: none;
             margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .correct {
-            background-color: #d4edda;
-            border-left: 4px solid #28a745;
-        }
-        .incorrect {
-            background-color: #f8d7da;
-            border-left: 4px solid #dc3545;
+            width: 100%;
         }
         .progress-container {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            gap: 10px;
         }
         .progress-bar {
             flex-grow: 1;
             height: 10px;
-            background-color: #ecf0f1;
+            background-color: #e9ecef;
             border-radius: 5px;
-            margin: 0 10px;
             overflow: hidden;
         }
         .progress-fill {
             height: 100%;
-            background-color: #3498db;
+            background-color: #007bff;
             width: 0%;
             transition: width 0.3s;
         }
-        .timer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .result {
+            display: none;
+            text-align: center;
             font-size: 18px;
-            margin-bottom: 15px;
-            background-color: #34495e;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .timer-icon {
-            margin-right: 8px;
-        }
-        .answers {
-            margin-top: 30px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .answer-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .correct-answer {
-            color: #28a745;
             font-weight: bold;
-        }
-        .user-answer {
-            margin-top: 5px;
-        }
-        .user-correct {
-            color: #28a745;
-        }
-        .user-incorrect {
-            color: #dc3545;
-        }
-        .controls {
-            display: flex;
-            justify-content: space-between;
             margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
         }
-        .question-nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 20px;
+        .result.correct {
+            background-color: #d4edda;
+            color: #155724;
         }
-        .question-nav-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            background-color: white;
-            cursor: pointer;
-        }
-        .question-nav-btn.current {
-            background-color: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-        .question-nav-btn.answered {
-            background-color: #ecf0f1;
-        }
-        select {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            margin-right: 10px;
-        }
-        label {
-            margin-right: 15px;
-        }
-        .finish-btn {
-            background-color: #e74c3c;
-            margin-top: 10px;
-        }
-        .finish-btn:hover {
-            background-color: #c0392b;
+        .result.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
         }
     </style>
 </head>
 <body>
-    <h1>IT Terminology Test</h1>
-    <div class="settings" id="settings">
-        <div>
-            <label for="question-limit">Number of questions:</label>
-            <select id="question-limit">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-                <option value="50">50</option>
-                <option value="63" selected>All (63)</option>
-            </select>
-            
-            <label for="time-limit">Time (minutes):</label>
-            <select id="time-limit">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="0">No limit</option>
-            </select>
-        </div>
-    </div>
-    
-    <div class="timer" id="timer">
-        <span class="timer-icon">⏱️</span>
-        <span id="time-display">10:00</span>
-    </div>
+    <h1>Programming Knowledge Test</h1>
     
     <div class="progress-container">
-        <span id="progress-text">Question 1 of 63</span>
+        <span id="progress-text">Question 1 of 10</span>
         <div class="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
         </div>
-        <span id="score">0/63</span>
     </div>
     
-    <div id="quiz-container">
-        <!-- Questions will be inserted here -->
+    <div class="question-container">
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
     </div>
     
     <div class="controls">
-        <button id="prev-btn" disabled>← Previous</button>
-        <button id="next-btn">Next →</button>
+        <button id="prev-btn" disabled>Previous</button>
+        <button id="next-btn">Next</button>
     </div>
     
-    <div class="question-nav" id="question-nav">
-        <!-- Question navigation will be here -->
-    </div>
+    <button id="finish-btn">Finish Test</button>
     
-    <button id="finish-btn" class="finish-btn">Finish Test</button>
-    <button id="restart-btn">Start Over</button>
-    
-    <div id="result" class="result" style="display: none;"></div>
-    <div id="answers-container" class="answers" style="display: none;">
-        <h2>Test Results</h2>
-        <div id="answers-list"></div>
-    </div>
+    <div id="result" class="result"></div>
 
     <script>
-        const allQuestions = [
+        // Questions data
+        const questions = [
             {
-                question: "1. Insert the appropriate article: We need ___ efficient algorithm to solve this problem.",
-                options: ["a", "an", "the"],
-                answer: "an"
-            },
-            {
-                question: "2. Choose an example of phishing: Which is an example of phishing?",
+                question: "1. Как получить значение из wxTextCtrl?",
                 options: [
-                    "Receiving a software update notification",
-                    "Receiving a fake email asking for login details",
-                    "A pop-up ad for a new product"
+                    "textCtrl->GetValue();",
+                    "textCtrl->SetValue();",
+                    "textCtrl->UpdateValue();",
+                    "textCtrl->RetrieveValue();"
                 ],
-                answer: "Receiving a fake email asking for login details"
+                answer: "textCtrl->GetValue();"
             },
             {
-                question: "3. Define a step-by-step process: A step-by-step process to complete a task.",
-                options: ["flowchart", "algorithm", "protocol"],
-                answer: "algorithm"
-            },
-            {
-                question: "4. Fill in the blanks with appropriate adverbs and verbs: The helpdesk staff (answer, usually) about 100 tickets daily, but this week they (handle) twice as many due to the system outage.",
+                question: "2. Как создать таблицу в базе данных SQLite?",
                 options: [
-                    "usually answer, handle",
-                    "usually answers, are handling",
-                    "answer usually, handled"
+                    "sqlite3_exec(db, \"CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, name TEXT);\", nullptr, nullptr, nullptr);",
+                    "sqlite3_create_table(db, \"users\");",
+                    "sqlite3_insert_table(db, \"users\");",
+                    "sqlite3_define_table(db, \"users\");"
                 ],
-                answer: "usually answers, are handling"
+                answer: "sqlite3_exec(db, \"CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, name TEXT);\", nullptr, nullptr, nullptr);"
             },
             {
-                question: "5. Define the term 'execute instructions': To carry out (or 'run') an instruction or set of instructions.",
-                options: ["compile", "execute", "debug"],
-                answer: "execute"
-            },
-            {
-                question: "6. Identify the correct term from the definition: A diagram showing steps in a process.",
-                options: ["pseudocode", "flowchart", "schema"],
-                answer: "flowchart"
-            },
-            {
-                question: "7. Complete the question using the correct verb form: What ___ when the server crashed?",
-                options: ["did you do", "were you doing", "you were doing"],
-                answer: "were you doing"
-            },
-            {
-                question: "8. Select all antonyms for the word 'portable': For the word 'portable', select all correct antonyms.",
-                options: ["stationary", "immobile", "fixed", "lightweight"],
-                answer: ["stationary", "immobile", "fixed"],
-                multiple: true
-            },
-            {
-                question: "9. Complete the sentence using the correct past tense verb forms: After I ___ the security vulnerability, I ___ to the IT department immediately.",
-                options: ["find, report", "found, reported", "have found, reported"],
-                answer: "found, reported"
-            },
-            {
-                question: "10. Insert the appropriate articles: Dijkstra's algorithm finds ___ shortest path between ___ nodes in ___ graph.",
-                options: ["a, the, a", "the, the, a", "the, -, the"],
-                answer: "the, the, a"
-            },
-            {
-                question: "11. Complete the sentence: A mouse is a small ... used to point to and select items on your computer screen.",
-                options: ["tool", "device", "gadget"],
-                answer: "device"
-            },
-            {
-                question: "12. Insert the modal verb in passive construction: All cloud storage buckets ___ have proper access controls configured.",
-                options: ["should", "must", "might"],
-                answer: "must"
-            },
-            {
-                question: "13. Complete the sentence using past and future verb forms: The developer ___ at the office by 9 AM, but his team ___ there. They ___ remotely from home.",
+                question: "3. Как запустить поток с асинхронной задачей в wxWidgets?",
                 options: [
-                    "arrives, isn't, work",
-                    "arrived, wasn't, were working",
-                    "arrived, weren't, worked"
+                    "thread->Run();",
+                    "thread->Start();",
+                    "thread->Execute();",
+                    "thread->Launch();"
                 ],
-                answer: "arrived, wasn't, were working"
+                answer: "thread->Start();"
             },
             {
-                question: "14. Explain what 'Data breach' means: What is meant by a 'Data breach'?",
+                question: "4. Как правильно объявить функцию, которая принимает два целых числа и возвращает их сумму в языке C?",
                 options: [
-                    "A scheduled data backup",
-                    "An incident where confidential data is exposed without authorization",
-                    "A legal data transfer"
+                    "int sum(int a, int b);",
+                    "void sum(int a, int b);",
+                    "int add(int a, int b);",
+                    "void add(int a, int b);"
                 ],
-                answer: "An incident where confidential data is exposed without authorization"
+                answer: "int sum(int a, int b);"
             },
             {
-                question: "15. Define an error: An error that causes unexpected program behavior.",
-                options: ["glitch", "bug", "exception"],
-                answer: "bug"
-            },
-            {
-                question: "16. Identify the correct term from the definition: A device that routes data packets in a LAN.",
-                options: ["switch", "router", "hub"],
-                answer: "router"
-            },
-            {
-                question: "17. Explain what '500 Internal Server Error' indicates: What does '500 Internal Server Error' indicate?",
+                question: "5. Как вывести переведенную строку с использованием wxWidgets?",
                 options: [
-                    "A client-side issue",
-                    "A server-side problem (bug, misconfiguration)",
-                    "A network timeout"
+                    "wxGetTranslation(\"Hello, world!\");",
+                    "wxTranslate(\"Hello, world!\");",
+                    "wxLocalizedText(\"Hello, world!\");",
+                    "wxMessage(\"Hello, world!\");"
                 ],
-                answer: "A server-side problem (bug, misconfiguration)"
+                answer: "wxGetTranslation(\"Hello, world!\");"
             },
             {
-                question: "18. Complete the sentence: Your computer has one or more ... — devices that store information on a metal or plastic disk.",
-                options: ["disk drives", "SSDs", "flash drives"],
-                answer: "disk drives"
+                question: "6. Какой из следующих типов данных используется для хранения целых чисел в C++?",
+                options: ["int", "float", "char", "string"],
+                answer: "int"
             },
             {
-                question: "19. Identify the correct term from the definition: Verifying the identity of a user or process.",
-                options: ["authorization", "authentication", "encryption"],
-                answer: "authentication"
-            },
-            {
-                question: "20. Fill in the blanks with the correct present tense form: Our DevOps team (work) on this cloud migration since January.",
-                options: ["works", "worked", "has been working"],
-                answer: "has been working"
-            },
-            {
-                question: "21. Identify the concept meaning problem decomposition: Breaking down a problem or system into components.",
-                options: ["abstraction", "decomposition", "modularization"],
-                answer: "decomposition"
-            },
-            {
-                question: "22. Define a computer network: A group of computing devices connected by cables or wireless media.",
-                options: ["cluster", "network", "grid"],
-                answer: "network"
-            },
-            {
-                question: "23. Complete the sentence: A computer is really a ... of many parts working together.",
-                options: ["combination", "collection", "assembly"],
-                answer: "combination"
-            },
-            {
-                question: "24. Fill in the blank with the appropriate modal verb: When configuring a new server, you ___ follow all security protocols precisely.",
-                options: ["should", "must", "could"],
-                answer: "must"
-            },
-            {
-                question: "25. Identify what refers to physical computing components: The physical components that make up a computing system, computer, or computing device.",
-                options: ["hardware", "software", "firmware"],
-                answer: "hardware"
-            },
-            {
-                question: "26. Define the term 'Encryption': What does the term 'Encryption' refer to?",
+                question: "7. Как установить прозрачность для окна в wxWidgets?",
                 options: [
-                    "The process of compressing data to save space",
-                    "The process of encoding information to prevent unauthorized access",
-                    "The process of backing up important files"
+                    "frame->SetTransparent(128);",
+                    "frame->SetOpacity(128);",
+                    "frame->SetAlpha(128);",
+                    "frame->SetTransparency(128);"
                 ],
-                answer: "The process of encoding information to prevent unauthorized access"
+                answer: "frame->SetTransparent(128);"
             },
             {
-                question: "27. Identify the correct Microsoft Office program: Which Microsoft Office program creates slide-based presentations?",
-                options: ["Word", "Excel", "PowerPoint"],
-                answer: "PowerPoint"
-            },
-            {
-                question: "28. Define a 'variable' in programming: A symbolic name that is used to keep track of a changing value during program execution.",
-                options: ["function", "variable", "constant"],
-                answer: "variable"
-            },
-            {
-                question: "29. Define what 'debugging' means: Finding and fixing errors in code.",
-                options: ["debugging", "compiling", "refactoring"],
-                answer: "debugging"
-            },
-            {
-                question: "30. Select the correct verb tenses in the programmer's description: Sarah (write) clean code and (document) all her work. She (improve) her skills since joining Google. So far she (contribute) to five major projects.",
+                question: "8. Как установить курсор для wxTextCtrl?",
                 options: [
-                    "writes, documents, has been improving, has contributed",
-                    "wrote, documented, improved, contributed",
-                    "is writing, is documenting, improves, contributes"
+                    "textCtrl->SetCursor(wxCURSOR_HAND);",
+                    "textCtrl->SetCursor(wxCURSOR_ARROW);",
+                    "textCtrl->SetCursor(wxCURSOR_CROSS);",
+                    "textCtrl->SetCursor(wxCURSOR_IBEAM);"
                 ],
-                answer: "writes, documents, has been improving, has contributed"
+                answer: "textCtrl->SetCursor(wxCURSOR_IBEAM);"
             },
             {
-                question: "31. Identify system users: Expected users of a system.",
-                options: ["clients", "audience", "developers"],
-                answer: "audience"
-            },
-            {
-                question: "32. Explain the purpose of encryption: What is the purpose of encryption?",
+                question: "9. Как привязать обработчик события на изменение текста в wxTextCtrl?",
                 options: [
-                    "To compress data for storage",
-                    "To protect data by converting it into unreadable form",
-                    "To speed up data transmission"
+                    "textCtrl->Bind(wxEVT_TEXT, &MyFrame::OnTextChanged, this);",
+                    "textCtrl->On(wxEVT_TEXT, &MyFrame::OnTextChanged, this);",
+                    "textCtrl->Connect(wxEVT_TEXT, &MyFrame::OnTextChanged, this);",
+                    "textCtrl->SetEventHandler(wxEVT_TEXT, &MyFrame::OnTextChanged);"
                 ],
-                answer: "To protect data by converting it into unreadable form"
+                answer: "textCtrl->Bind(wxEVT_TEXT, &MyFrame::OnTextChanged, this);"
             },
             {
-                question: "33. Answer the question about basic file storage practice: Where should you store your code files for a project?",
+                question: "10. Как обновить интерфейс в wxWidgets?",
                 options: [
-                    "in the project directory",
-                    "on the desktop",
-                    "in random folders"
+                    "panel->Refresh();",
+                    "panel->Update();",
+                    "panel->Redraw();",
+                    "panel->Invalidate();"
                 ],
-                answer: "in the project directory"
-            },
-            {
-                question: "34. Identify the correct term from the definition: An early version of a system for demonstration.",
-                options: ["prototype", "beta", "alpha"],
-                answer: "prototype"
-            },
-            {
-                question: "35. Insert the appropriate article: ___ Internet has revolutionized modern communication.",
-                options: ["A", "An", "The", "no article"],
-                answer: "The"
-            },
-            {
-                question: "36. Insert the appropriate articles: She debugged ___ code and fixed ___ error in line 42.",
-                options: [
-                    "a, an",
-                    "the, the",
-                    "no article, an"
-                ],
-                answer: "the, the"
-            },
-            {
-                question: "37. Answer the question about schedule: When does the daily automated backup run?",
-                options: [
-                    "at 2:00 AM",
-                    "at noon",
-                    "whenever the server is idle"
-                ],
-                answer: "at 2:00 AM"
-            },
-            {
-                question: "38. Answer what to include when describing a past project: When asked about a past project, what should you include?",
-                options: [
-                    "Only the programming languages used",
-                    "Your role, technologies used, and outcomes",
-                    "Just the project name"
-                ],
-                answer: "Your role, technologies used, and outcomes"
-            },
-            {
-                question: "39. Identify what network diagram represents: A network's physical and logical layout.",
-                options: ["topology", "architecture", "blueprint"],
-                answer: "topology"
-            },
-            {
-                question: "40. Insert the appropriate article:___ Python is widely used in data science.",
-                options: ["A", "An", "The", "no article"],
-                answer: "no article"
-            },
-            {
-                question: "41. Identify the correct term from the definition: Imitating a real-world process or system.",
-                options: ["simulation", "emulation", "approximation"],
-                answer: "simulation"
-            },
-            {
-                question: "42. Define 'program': Any set of instructions expressed in a programming language.",
-                options: ["script", "code", "algorithm"],
-                answer: "code"
-            },
-            {
-                question: "43. Complete the sentence using correct Continuous tense: The developer (refactor) legacy code when he (notice) a serious security flaw.",
-                options: [
-                    "was refactoring, noticed",
-                    "refactored, was noticing",
-                    "had refactored, noticed"
-                ],
-                answer: "was refactoring, noticed"
-            },
-            {
-                question: "44. Identify the correct term from the definition: Transforming data into a protected format unreadable to outsiders.",
-                options: ["encoding", "encryption", "compression"],
-                answer: "encryption"
-            },
-            {
-                question: "45. Identify the correct term from the definition: Any action or change recognized by software or hardware.",
-                options: ["event", "trigger", "signal"],
-                answer: "event"
-            },
-            {
-                question: "46. Insert the appropriate article: We use ___ hash function to encrypt passwords.",
-                options: ["a", "an", "the"],
-                answer: "a"
-            },
-            {
-                question: "47. Complete the sentence using correct verb forms: I ___ the system logs when the power outage occurred. Now I can't complete my analysis.",
-                options: [
-                    "was reviewing",
-                    "reviewed",
-                    "had reviewed"
-                ],
-                answer: "was reviewing"
-            },
-            {
-                question: "48. Fill in the blanks with verbs describing daily routine: Every morning our IT team (check) the servers, (monitor) traffic, and (update) the firewall. But yesterday we (miss) the security alert.",
-                options: [
-                    "checks, monitors, updates, missed",
-                    "checked, monitored, updated, missed",
-                    "is checking, is monitoring, is updating, missed"
-                ],
-                answer: "checks, monitors, updates, missed"
-            },
-            {
-                question: "49. Complete the sentence with correct verb forms: When the server crash (occur) last night, I (troubleshoot) a network issue.",
-                options: [
-                    "occurred, was troubleshooting",
-                    "was occurring, troubleshooted",
-                    "occurred, had troubleshooted"
-                ],
-                answer: "occurred, was troubleshooting"
-            },
-            {
-                question: "50. Insert the appropriate article: ___ Turing machine is a theoretical model of computation.",
-                options: ["A", "An", "The"],
-                answer: "The"
-            },
-            {
-                question: "51. Select all antonyms for the word 'manual': For the word 'manual', select all correct antonyms.",
-                options: ["computerized", "automatic", "digital", "electronic"],
-                answer: ["computerized", "automatic", "digital"],
-                multiple: true
-            },
-            {
-                question: "52. Identify the smallest unit of digital information: What is the smallest unit of digital information?",
-                options: ["bit", "byte", "nibble"],
-                answer: "bit"
-            },
-            {
-                question: "53. Answer the question: What should you do after fixing a bug in the code?",
-                options: [
-                    "Commit the changes with a descriptive message",
-                    "Just save the file",
-                    "Tell your manager"
-                ],
-                answer: "Commit the changes with a descriptive message"
-            },
-            {
-                question: "54. Define 'Source code': Which best describes 'Source code'?",
-                options: [
-                    "Human-readable instructions that are compiled into machine code",
-                    "The binary executable file",
-                    "Documentation for the program"
-                ],
-                answer: "Human-readable instructions that are compiled into machine code"
-            },
-            {
-                question: "55. Complete the sentence using past tense verb forms: I ___ you yesterday about the database issue, but you ___ available.",
-                options: [
-                    "called, weren't",
-                    "was calling, weren't",
-                    "called, wasn't"
-                ],
-                answer: "called, weren't"
-            },
-            {
-                question: "56. Select correct past tenses for IT incident: By the time the sysadmin (arrive), the database (crash) for two hours.",
-                options: [
-                    "arrived, had been crashed",
-                    "had arrived, crashed",
-                    "arrived, was crashing"
-                ],
-                answer: "arrived, had been crashed"
-            },
-            {
-                question: "57. Answer the question: What is the main purpose of a README.md file?",
-                options: [
-                    "To explain how to set up and use the project",
-                    "To list all source code files",
-                    "To store configuration settings"
-                ],
-                answer: "To explain how to set up and use the project"
-            },
-            {
-                question: "58. Select all synonyms for the word 'configure': For the word 'configure', select all correct synonyms.",
-                options: ["customize", "adjust", "set up", "design"],
-                answer: ["customize", "adjust", "set up"],
-                multiple: true
-            },
-            {
-                question: "59. Decipher the SQL acronym in database context: What does SQL stand for in database systems?",
-                options: [
-                    "Structured Query Language",
-                    "Simple Question Logic",
-                    "System Query Layer"
-                ],
-                answer: "Structured Query Language"
-            },
-            {
-                question: "60. Select all synonyms for the word 'complex': For the word 'complex', select all correct synonyms.",
-                options: ["complicated", "simple", "difficult", "straightforward"],
-                answer: ["complicated", "difficult"],
-                multiple: true
-            },
-            {
-                question: "61. Define symbolic language instructions: Computing instructions written in symbolic code that must be translated before execution.",
-                options: ["algorithm", "assembly", "pseudocode"],
-                answer: "assembly"
-            },
-            {
-                question: "62. Insert the appropriate articles: ___ second parameter in this function must be ___ callback.",
-                options: [
-                    "The, a",
-                    "A, the",
-                    "No article, a"
-                ],
-                answer: "The, a"
-            },
-            {
-                question: "63. The QA engineer (test) software daily. She (find) an average of 15 bugs per week. Next month she (join) the automation team.",
-                options: [
-                    "tests, finds, is joining",
-                    "tested, found, joined",
-                    "is testing, is finding, joins"
-                ],
-                answer: "tests, finds, is joining"
+                answer: "panel->Refresh();"
             }
         ];
 
-        // Test settings
-        let TOTAL_QUESTIONS = 63;
-        let TIME_LIMIT = 600; // 10 minutes in seconds
-        let questions = [];
+        // Shuffle questions array
+        questions.sort(() => Math.random() - 0.5);
+
         let currentQuestionIndex = 0;
         let score = 0;
-        let timeLeft = TIME_LIMIT;
-        let timerInterval;
-        let userAnswers = [];
-        let testCompleted = false;
-        
+        const userAnswers = Array(questions.length).fill(null);
+
         // DOM elements
-        const quizContainer = document.getElementById('quiz-container');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const finishBtn = document.getElementById('finish-btn');
-        const restartBtn = document.getElementById('restart-btn');
-        const resultDiv = document.getElementById('result');
+        const resultElement = document.getElementById('result');
         const progressText = document.getElementById('progress-text');
         const progressFill = document.getElementById('progress-fill');
-        const scoreDisplay = document.getElementById('score');
-        const timerDisplay = document.getElementById('time-display');
-        const answersContainer = document.getElementById('answers-container');
-        const answersList = document.getElementById('answers-list');
-        const questionNav = document.getElementById('question-nav');
-        const questionLimitSelect = document.getElementById('question-limit');
-        const timeLimitSelect = document.getElementById('time-limit');
 
-        // Initialize test
-        function initTest() {
-            // Get settings
-            TOTAL_QUESTIONS = parseInt(questionLimitSelect.value);
-            TIME_LIMIT = timeLimitSelect.value === "0" ? Infinity : parseInt(timeLimitSelect.value) * 60;
+        // Load question
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
             
-            // Select random questions
-            questions = [...allQuestions]
-                .sort(() => 0.5 - Math.random())
-                .slice(0, TOTAL_QUESTIONS);
+            // Shuffle options
+            const shuffledOptions = [...currentQuestion.options].sort(() => Math.random() - 0.5);
             
-            // Shuffle answer options for each question
-            questions.forEach(q => {
-                const correctAnswer = q.multiple ? q.answer : [q.answer];
-                const allOptions = [...q.options];
+            optionsElement.innerHTML = '';
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
                 
-                // Shuffle options
-                q.options = allOptions.sort(() => 0.5 - Math.random());
-                
-                // Update correct answer based on shuffled options
-                if (q.multiple) {
-                    q.answer = correctAnswer.filter(ans => q.options.includes(ans));
-                } else {
-                    q.answer = q.options.find(opt => correctAnswer.includes(opt));
-                }
-            });
-            
-            currentQuestionIndex = 0;
-            score = 0;
-            timeLeft = TIME_LIMIT;
-            userAnswers = [];
-            testCompleted = false;
-            
-            // Start timer if needed
-            clearInterval(timerInterval);
-            if (isFinite(TIME_LIMIT)) {
-                updateTimer();
-                timerInterval = setInterval(updateTimer, 1000);
-                document.getElementById('timer').style.display = 'flex';
-            } else {
-                document.getElementById('timer').style.display = 'none';
-            }
-            
-            // Create question navigation
-            createQuestionNav();
-            
-            // Show first question
-            showQuestion();
-            
-            // Update UI
-            restartBtn.style.display = 'none';
-            finishBtn.style.display = 'block';
-            resultDiv.style.display = 'none';
-            answersContainer.style.display = 'none';
-            answersList.innerHTML = '';
-            document.getElementById('settings').style.display = 'none';
-        }
-
-        // Create question navigation
-        function createQuestionNav() {
-            questionNav.innerHTML = '';
-            for (let i = 0; i < questions.length; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'question-nav-btn';
-                btn.textContent = i + 1;
-                btn.addEventListener('click', () => {
-                    if (!testCompleted) {
-                        saveAnswer();
-                        currentQuestionIndex = i;
-                        showQuestion();
+                // Check if this option was previously selected
+                if (userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].selected === option) {
+                    optionElement.classList.add('selected');
+                    if (userAnswers[currentQuestionIndex].isCorrect) {
+                        optionElement.classList.add('correct');
+                    } else {
+                        optionElement.classList.add('incorrect');
                     }
-                });
-                questionNav.appendChild(btn);
-            }
-        }
-
-        // Show current question
-        function showQuestion() {
-            const q = questions[currentQuestionIndex];
+                }
+                
+                // Highlight correct answer if already answered
+                if (userAnswers[currentQuestionIndex] && option === currentQuestion.answer) {
+                    optionElement.classList.add('correct-answer');
+                }
+                
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(option, optionElement));
+                optionsElement.appendChild(optionElement);
+            });
             
             // Update progress
-            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${TOTAL_QUESTIONS}`;
-            progressFill.style.width = `${(currentQuestionIndex / TOTAL_QUESTIONS) * 100}%`;
-            scoreDisplay.textContent = `${score}/${TOTAL_QUESTIONS}`;
+            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            progressFill.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
             
-            // Update navigation
-            document.querySelectorAll('.question-nav-btn').forEach((btn, index) => {
-                btn.classList.toggle('current', index === currentQuestionIndex);
-                btn.classList.toggle('answered', userAnswers[index] !== undefined);
-            });
-            
-            // Update navigation buttons
+            // Update buttons
             prevBtn.disabled = currentQuestionIndex === 0;
-            nextBtn.disabled = false;
-            nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? "Finish" : "Next →";
+            nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'Finish' : 'Next';
             
-            // Show question
-            quizContainer.innerHTML = `
-                <div class="question" id="current-question">
-                    <p>${q.question}</p>
-                    <div class="options">
-                        ${q.options.map(option => {
-                            const isChecked = userAnswers[currentQuestionIndex]?.userAnswer.includes(option);
-                            return `
-                            <div class="option">
-                                <input type="${q.multiple ? 'checkbox' : 'radio'}" 
-                                       name="question${currentQuestionIndex}" 
-                                       id="q${currentQuestionIndex}_${option.replace(/\s+/g, '_')}" 
-                                       value="${option}"
-                                       ${isChecked ? 'checked' : ''}>
-                                <label for="q${currentQuestionIndex}_${option.replace(/\s+/g, '_')}">${option}</label>
-                            </div>`;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
+            // Hide finish button initially
+            finishBtn.style.display = 'none';
+            resultElement.style.display = 'none';
         }
 
-        // Save answer
-        function saveAnswer() {
-            const q = questions[currentQuestionIndex];
-            const questionDiv = quizContainer.querySelector('#current-question');
-            const selectedOptions = Array.from(questionDiv.querySelectorAll('input:checked')).map(el => el.value);
+        // Select option
+        function selectOption(selectedOption, optionElement) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const isCorrect = selectedOption === currentQuestion.answer;
             
-            // Check if answer already exists
-            const existingAnswerIndex = userAnswers.findIndex(a => a.question === q.question);
+            // Save user answer
+            userAnswers[currentQuestionIndex] = {
+                selected: selectedOption,
+                isCorrect: isCorrect
+            };
             
-            if (existingAnswerIndex >= 0) {
-                // Update existing answer
-                userAnswers[existingAnswerIndex].userAnswer = [...selectedOptions];
-            } else {
-                // Add new answer
-                userAnswers[currentQuestionIndex] = {
-                    question: q.question,
-                    userAnswer: [...selectedOptions],
-                    correctAnswer: q.multiple ? [...q.answer] : [q.answer],
-                    isCorrect: false
-                };
-            }
-        }
-
-        // Check answer - FIXED VERSION
-        function checkAnswer(index) {
-            const q = questions[index];
-            const userAnswer = userAnswers[index];
-            
-            if (!userAnswer) return false;
-            
-            // Convert both to arrays for comparison
-            const correctAnswers = Array.isArray(q.answer) ? q.answer : [q.answer];
-            const userAnswersArr = Array.isArray(userAnswer.userAnswer) ? userAnswer.userAnswer : [userAnswer.userAnswer];
-            
-            // Check if arrays have same length and same items (order doesn't matter)
-            if (correctAnswers.length !== userAnswersArr.length) {
-                return false;
+            // Update score
+            if (isCorrect) {
+                score++;
             }
             
-            // For multiple choice questions
-            if (q.multiple) {
-                return correctAnswers.every(ans => userAnswersArr.includes(ans)) && 
-                       userAnswersArr.every(ans => correctAnswers.includes(ans));
-            }
-            // For single answer questions
-            else {
-                return correctAnswers[0] === userAnswersArr[0];
-            }
-        }
-
-        // Update timer
-        function updateTimer() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                finishTest();
-            } else {
-                timeLeft--;
-            }
-        }
-
-        // Show correct answers
-        function showCorrectAnswers() {
-            answersList.innerHTML = '';
-            
-            // Recalculate score
-            score = 0;
-            for (let i = 0; i < questions.length; i++) {
-                if (userAnswers[i]) {
-                    userAnswers[i].isCorrect = checkAnswer(i);
-                    if (userAnswers[i].isCorrect) {
-                        score++;
-                    }
-                }
-            }
-            
-            userAnswers.forEach((item, index) => {
-                const answerItem = document.createElement('div');
-                answerItem.className = 'answer-item';
-                
-                const questionText = document.createElement('p');
-                questionText.innerHTML = `<strong>${index + 1}. ${item.question}</strong>`;
-                
-                const correctAnswer = document.createElement('p');
-                correctAnswer.className = 'correct-answer';
-                correctAnswer.textContent = `Correct answer: ${item.correctAnswer.join(', ')}`;
-                
-                const userAnswer = document.createElement('p');
-                userAnswer.className = `user-answer ${item.isCorrect ? 'user-correct' : 'user-incorrect'}`;
-                userAnswer.textContent = `Your answer: ${item.userAnswer.length > 0 ? item.userAnswer.join(', ') : 'No answer'}`;
-                
-                answerItem.appendChild(questionText);
-                answerItem.appendChild(correctAnswer);
-                answerItem.appendChild(userAnswer);
-                answersList.appendChild(answerItem);
+            // Highlight selected option
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
             });
             
-            const percentage = Math.round((score / TOTAL_QUESTIONS) * 100);
-            let message;
-            
-            if (percentage >= 80) {
-                message = `Excellent! You scored ${score} out of ${TOTAL_QUESTIONS} (${percentage}%)`;
-                resultDiv.className = 'result correct';
-            } else if (percentage >= 50) {
-                message = `Good! You scored ${score} out of ${TOTAL_QUESTIONS} (${percentage}%)`;
-                resultDiv.className = 'result correct';
+            optionElement.classList.add('selected');
+            if (isCorrect) {
+                optionElement.classList.add('correct');
             } else {
-                message = `Try again. You scored ${score} out of ${TOTAL_QUESTIONS} (${percentage}%)`;
-                resultDiv.className = 'result incorrect';
+                optionElement.classList.add('incorrect');
+                
+                // Highlight correct answer
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.textContent === currentQuestion.answer) {
+                        opt.classList.add('correct-answer');
+                    }
+                });
             }
             
-            resultDiv.textContent = message;
-            resultDiv.style.display = 'block';
-            answersContainer.style.display = 'block';
+            // Auto proceed to next question after delay if correct
+            if (isCorrect) {
+                setTimeout(() => {
+                    if (currentQuestionIndex < questions.length - 1) {
+                        currentQuestionIndex++;
+                        loadQuestion();
+                    } else {
+                        showResult();
+                    }
+                }, 1000);
+            }
         }
 
-        // Finish test
-        function finishTest() {
-            clearInterval(timerInterval);
-            testCompleted = true;
+        // Show result
+        function showResult() {
+            questionElement.textContent = 'Test Completed!';
+            optionsElement.innerHTML = '';
             
-            // Check all answers
-            showCorrectAnswers();
+            const percentage = Math.round((score / questions.length) * 100);
+            resultElement.textContent = `You scored ${score} out of ${questions.length} (${percentage}%)`;
             
-            // Update UI
-            quizContainer.innerHTML = '';
+            if (percentage >= 70) {
+                resultElement.classList.add('correct');
+                resultElement.classList.remove('incorrect');
+            } else {
+                resultElement.classList.add('incorrect');
+                resultElement.classList.remove('correct');
+            }
+            
+            resultElement.style.display = 'block';
+            finishBtn.style.display = 'none';
             prevBtn.style.display = 'none';
             nextBtn.style.display = 'none';
-            finishBtn.style.display = 'none';
-            restartBtn.style.display = 'block';
-            document.getElementById('settings').style.display = 'block';
         }
 
-        // Event handlers
+        // Event listeners
         prevBtn.addEventListener('click', () => {
-            saveAnswer();
-            currentQuestionIndex--;
-            showQuestion();
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
         });
 
         nextBtn.addEventListener('click', () => {
-            saveAnswer();
-            
-            if (currentQuestionIndex === questions.length - 1) {
-                finishTest();
-            } else {
+            if (currentQuestionIndex < questions.length - 1) {
                 currentQuestionIndex++;
-                showQuestion();
+                loadQuestion();
+            } else {
+                showResult();
             }
         });
 
-        finishBtn.addEventListener('click', finishTest);
-        restartBtn.addEventListener('click', initTest);
+        finishBtn.addEventListener('click', showResult);
 
-        // Start test when page loads
-        initTest();
+        // Start the test
+        loadQuestion();
     </script>
 </body>
 </html>
